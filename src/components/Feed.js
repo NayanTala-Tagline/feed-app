@@ -17,9 +17,9 @@ const Feed = (props) => {
                     </TouchableOpacity>
 
                 </ImageBackground>}
-            <Text style={styles.username}>{props?.username}
-                <Text style={styles.caption}>{props?.caption}</Text>
-            </Text>
+            {(props?.username || props?.caption) && <Text style={styles.username}>{props?.username}
+                <Text style={styles.caption}> {props?.caption}</Text>
+            </Text>}
         </View>
     )
 }
@@ -40,16 +40,17 @@ const styles = StyleSheet.create({
         height: wp(40),
         borderRadius: wp(2),
         alignItems: 'center',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        resizeMode: 'cover'
     },
     username: {
-        fontSize: FontSizes.EXTRA_SMALL_12,
+        fontSize: FontSizes.SMALL_14,
         fontWeight: '700',
         color: colors.BLACK,
         marginTop: wp(1)
     },
     caption: {
-        fontSize: FontSizes.EXTRA_SMALL_12,
+        fontSize: FontSizes.SMALL_14,
         fontWeight: '400',
         color: colors.BLACK
     },

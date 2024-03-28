@@ -4,7 +4,7 @@ import { colors } from '../styles/colors';
 
 
 
-const CustomActivityIndicator = (props: React.JSX.IntrinsicAttributes & React.JSX.IntrinsicClassAttributes<ActivityIndicator> & Readonly<ActivityIndicatorProps>) => {
+const CustomActivityIndicator = (props) => {
     return (
         <ActivityIndicator
             {...props}
