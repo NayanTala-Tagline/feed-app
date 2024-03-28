@@ -1,4 +1,4 @@
-import { Image, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, ImageBackground,  ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FontSizes from '../styles/fontSizes'
@@ -57,42 +57,44 @@ const AddFeed = () => {
 
             {isLoading ?
                 <CustomActivityIndicator size={'large'} /> :
-                <View style={styles.mainContainer}>
-                    <TouchableOpacity onPress={() => navigation.navigate('FeedList')}>
-                        <Image style={styles.listImg} source={ImagesPath.list_icon} />
-                    </TouchableOpacity>
-                    <View style={styles.container}>
-                        {selectedImage !== '' ?
-                            <View>
-                                <TouchableOpacity style={[styles.addPostRound, styles.editPostRound]}
-                                    onPress={pickImageAsync}>
-                                    <Image style={styles.addImg} source={ImagesPath.edit_icon} />
-                                </TouchableOpacity>
-                                <ImageBackground style={styles.imageCard} source={{ uri: selectedImage.uri }}>
-                                </ImageBackground>
-                            </View>
-                            : <View style={styles.imageCard}>
-                                <TouchableOpacity style={styles.addPostRound} onPress={pickImageAsync}>
-                                    <Image style={styles.addImg} source={ImagesPath.add_icon} />
-                                </TouchableOpacity>
-                            </View>}
-
-                        <View style={styles.txtInputContainer}>
-                            <TextInput placeholder='Add caption here...'
-                                onChangeText={(caption) => setCaption(caption)}
-                                style={styles.inputTextStyle} />
-                        </View>
-                        <View style={styles.txtInputContainer}>
-                            <TextInput placeholder='Add username here...'
-                                onChangeText={(uname) => setUsername(uname)}
-                                style={styles.inputTextStyle} />
-                        </View>
-                        <TouchableOpacity style={[styles.btnContainer, { backgroundColor: selectedImage == '' ? 'gray' : colors.BLUE }]} onPress={() => onAddPost()} disabled={selectedImage == ''}>
-                            <Text style={styles.addPostStyle}>Add Post</Text>
+                <ScrollView contentContainerStyle={styles.mainContainer} keyboardShouldPersistTaps='handled' bounces={false}>
+                    <View style={styles.mainContainer}>
+                        <TouchableOpacity onPress={() => navigation.navigate('FeedList')}>
+                            <Image style={styles.listImg} source={ImagesPath.list_icon} />
                         </TouchableOpacity>
+                        <View style={styles.container}>
+                            {selectedImage !== '' ?
+                                <View>
+                                    <TouchableOpacity style={[styles.addPostRound, styles.editPostRound]}
+                                        onPress={pickImageAsync}>
+                                        <Image style={styles.addImg} source={ImagesPath.edit_icon} />
+                                    </TouchableOpacity>
+                                    <ImageBackground style={styles.imageCard} source={{ uri: selectedImage.uri }}>
+                                    </ImageBackground>
+                                </View>
+                                : <View style={styles.imageCard}>
+                                    <TouchableOpacity style={styles.addPostRound} onPress={pickImageAsync}>
+                                        <Image style={styles.addImg} source={ImagesPath.add_icon} />
+                                    </TouchableOpacity>
+                                </View>}
 
+                            <View style={styles.txtInputContainer}>
+                                <TextInput placeholder='Add caption here...'
+                                    onChangeText={(caption) => setCaption(caption)}
+                                    style={styles.inputTextStyle} />
+                            </View>
+                            <View style={styles.txtInputContainer}>
+                                <TextInput placeholder='Add username here...'
+                                    onChangeText={(uname) => setUsername(uname)}
+                                    style={styles.inputTextStyle} />
+                            </View>
+                            <TouchableOpacity style={[styles.btnContainer, { backgroundColor: selectedImage == '' ? 'gray' : colors.BLUE }]} onPress={() => onAddPost()} disabled={selectedImage == ''}>
+                                <Text style={styles.addPostStyle}>Add Post</Text>
+                            </TouchableOpacity>
+
+                        </View>
                     </View>
-                </View>
+                </ScrollView>
             }
         </SafeAreaView>
     )
@@ -106,7 +108,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        justifyContent: 'center',
+        marginTop:wp(10),
         paddingHorizontal: wp(5)
     },
     imageCard: {
