@@ -1,19 +1,35 @@
-import { Image, ImageBackground,  ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import FontSizes from '../styles/fontSizes'
-import { colors } from '../styles/colors'
+
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen'
-import { ImagesPath } from '../utils/imagePaths'
 import * as ImagePicker from 'expo-image-picker';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks'
 import { add_feed_data } from '../redux/slices/FeedSlice'
 import CustomActivityIndicator from '../components/CustomActivityIndicator'
 import { useNavigation } from '@react-navigation/native'
+import Colors from '@/constants/Colors'
+import FontSizes from '@/constants/FontSizes'
+import { ImagesPath } from '@/constants/ImagePaths';
+import { router } from 'expo-router';
+
+interface ImageState {
+    name: any;
+    type: any; // Assuming str.mimeType is a string type
+    uri: any;
+}
+
+// Set initial state with the defined interface
+const initialImageState: ImageState = {
+    name: '',
+    type: '',
+    uri: '',
+};
+
 
 const AddFeed = () => {
     const navigation = useNavigation()
-    const [selectedImage, setselectedImage] = useState('')
+    const [selectedImage, setselectedImage] = useState<any>()
     const [caption, setCaption] = useState('')
     const [username, setUsername] = useState('')
     const dispatch = useAppDispatch()
@@ -41,12 +57,15 @@ const AddFeed = () => {
     };
 
     const onAddPost = () => {
-        const data = new FormData()
+        const data: any = new FormData()
         data.append("file", selectedImage);
         data.append("username", username);
         data.append("caption", caption);
         dispatch(add_feed_data(data)).unwrap().then((res) => {
-            navigation.navigate('FeedList')
+            router.push('/FeedList')
+            setUsername('')
+            setCaption('')
+            setselectedImage({})
         }).catch((e) => {
 
         })
@@ -59,7 +78,7 @@ const AddFeed = () => {
                 <CustomActivityIndicator size={'large'} /> :
                 <ScrollView contentContainerStyle={styles.mainContainer} keyboardShouldPersistTaps='handled' bounces={false}>
                     <View style={styles.mainContainer}>
-                        <TouchableOpacity onPress={() => navigation.navigate('FeedList')}>
+                        <TouchableOpacity onPress={() => router.push('/FeedList')}>
                             <Image style={styles.listImg} source={ImagesPath.list_icon} />
                         </TouchableOpacity>
                         <View style={styles.container}>
@@ -69,7 +88,7 @@ const AddFeed = () => {
                                         onPress={pickImageAsync}>
                                         <Image style={styles.addImg} source={ImagesPath.edit_icon} />
                                     </TouchableOpacity>
-                                    <ImageBackground style={styles.imageCard} source={{ uri: selectedImage.uri }}>
+                                    <ImageBackground style={styles.imageCard} source={{ uri: selectedImage?.uri }}>
                                     </ImageBackground>
                                 </View>
                                 : <View style={styles.imageCard}>
@@ -88,7 +107,9 @@ const AddFeed = () => {
                                     onChangeText={(uname) => setUsername(uname)}
                                     style={styles.inputTextStyle} />
                             </View>
-                            <TouchableOpacity style={[styles.btnContainer, { backgroundColor: selectedImage == '' ? 'gray' : colors.BLUE }]} onPress={() => onAddPost()} disabled={selectedImage == ''}>
+                            <TouchableOpacity style={[styles.btnContainer, { backgroundColor: selectedImage == '' ? 'gray' : Colors.BLUE }]}
+                                onPress={() => onAddPost()}
+                                disabled={selectedImage == ''}>
                                 <Text style={styles.addPostStyle}>Add Post</Text>
                             </TouchableOpacity>
 
@@ -96,7 +117,7 @@ const AddFeed = () => {
                     </View>
                 </ScrollView>
             }
-        </SafeAreaView>
+        </SafeAreaView >
     )
 }
 
@@ -108,11 +129,11 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        marginTop:wp(10),
+        marginTop: wp(10),
         paddingHorizontal: wp(5)
     },
     imageCard: {
-        backgroundColor: colors.LIGHT_GRAY,
+        backgroundColor: Colors.LIGHT_GRAY,
         height: wp(40),
         borderRadius: wp(2),
         justifyContent: 'center',
@@ -148,7 +169,7 @@ const styles = StyleSheet.create({
         width: wp(4), height: wp(4)
     },
     btnContainer: {
-        backgroundColor: colors.BLUE,
+        backgroundColor: Colors.BLUE,
         paddingHorizontal: wp(5),
         borderRadius: wp(2),
         paddingVertical: wp(2),
@@ -156,8 +177,8 @@ const styles = StyleSheet.create({
     },
     txtInputContainer:
     {
-        backgroundColor: colors.LIGHT_GRAY,
-        borderColor: colors.BLACK,
+        backgroundColor: Colors.LIGHT_GRAY,
+        borderColor: Colors.BLACK,
         borderWidth: wp(0.1),
         borderRadius: wp(2),
         paddingVertical: wp(2),
@@ -168,7 +189,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#DBDEE5',
         fontSize: FontSizes.EXTRA_SMALL_12,
         borderRadius: wp(2),
-        color: colors.BLACK
+        color: Colors.BLACK
     }
 
 

@@ -69,7 +69,7 @@ export const likeFeed = async (req, res, next) => {
       { _id: id, deletedAt: null },
       { $inc: { likes: 1 } },
       { new: true }
-    );
+    ).then().catch();
     return response(
       true,
       res,

@@ -2,11 +2,12 @@ import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-nativ
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks'
-import { add_like, get_feed_data } from '../redux/slices/FeedSlice'
-import FontSizes from '../styles/fontSizes'
-import { colors } from '../styles/colors'
+import { add_like, feed_likes_Reducer, get_feed_data } from '../redux/slices/FeedSlice'
+
 import Feed from '../components/Feed'
 import CustomActivityIndicator from '../components/CustomActivityIndicator'
+import Colors from '@/constants/Colors'
+import FontSizes from '@/constants/FontSizes'
 
 const FeedList = () => {
     const dispatch = useAppDispatch()
@@ -14,12 +15,10 @@ const FeedList = () => {
     const [isFooterLoading, setIsFooterLoading] = useState(false)
 
     useEffect(() => {
-        ({ feedListttttt: feedList, isGetLoading, curPage, totalPages })
-
         _getFeedData(1)
     }, [])
 
-    const _getFeedData = (page) => {
+    const _getFeedData = (page: any) => {
         let params = {
             page: page,
             limit: 10
@@ -31,15 +30,25 @@ const FeedList = () => {
         })
     }
 
-    const addlikes = (id) => {
+    const addlikes = (id: string) => {
         dispatch(add_like(id)).unwrap().then((res) => {
-            setIsFooterLoading(false)
-            _getFeedData(1)
+            let tempFeedList = [...feedList]
+            let finalItem = tempFeedList.map((item, index) => {
+                if (item._id == id) {
+                    return {
+                        ...item,
+                        likes: item.likes + 1
+                    }
+                } else {
+                    return item
+                }
+
+            })
+            dispatch(feed_likes_Reducer(finalItem))
         }).catch(e => {
-            setIsFooterLoading(false)
         })
     }
-    const renderItem = ({ item }) => {
+    const renderItem = ({ item }: any) => {
         return (
             <Feed {...{ ...item, addlikes }} />
         );
@@ -58,14 +67,14 @@ const FeedList = () => {
                         return (
                             isFooterLoading &&
                             totalPages !== curPage && (
-                                <ActivityIndicator size={'small'} color={colors.BLACK} />
+                                <ActivityIndicator size={'small'} color={Colors.BLACK} />
                             )
                         );
                     }}
                     onEndReached={() => {
                         if (!isFooterLoading && totalPages !== curPage) {
                             setIsFooterLoading(true)
-                            _getFeedData(curPage + 1)
+                            _getFeedData(curPage + '1')
                         }
                     }}
                     onEndReachedThreshold={0.1} />
@@ -83,7 +92,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: FontSizes.SEMI_LARGE_20,
-        color: colors.BLACK,
+        color: Colors.BLACK,
         fontWeight: 'bold',
         alignSelf: 'center'
     }

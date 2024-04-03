@@ -6,7 +6,7 @@ import { persistStore, persistReducer } from 'redux-persist'
 import FeedSlice from './slices/FeedSlice';
 
 
-const persistConfig = {
+const persistConfig: any = {
     key: "root",
     storage: AsyncStorage,
     timeout: null,
@@ -16,7 +16,7 @@ const reducers = combineReducers({
     feed: FeedSlice,
 })
 
-const rootReducer = (state, action) => {
+const rootReducer = (state: any, action: any) => {
     return reducers(state, action)
 }
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -3,6 +3,5 @@ export const ImagesPath = {
     edit_icon: require('../assets/images/edit.png'),
     list_icon: require('../assets/images/list.png'),
     like_icon: require('../assets/images/like.png'),
-
-
+    like_animation: require('../assets/images/likes.json'),
 }
